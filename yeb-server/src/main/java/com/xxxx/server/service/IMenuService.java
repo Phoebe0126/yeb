@@ -2,6 +2,7 @@ package com.xxxx.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxxx.server.pojo.Menu;
+import com.xxxx.server.pojo.RespBean;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.xxxx.server.pojo.Menu;
  */
 public interface IMenuService extends IService<Menu> {
 
+    RespBean getMenusById();
 }

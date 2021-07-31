@@ -2,6 +2,7 @@ package com.xxxx.server.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.xxxx.server.mapper.AdminMapper;
 import com.xxxx.server.pojo.Admin;
 import com.xxxx.server.pojo.RespBean;
@@ -15,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import sun.plugin.liveconnect.SecurityContextHelper;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -48,10 +49,17 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      * 用户登录
      * @param username
      * @param password
+     * @param code
      * @return
      */
     @Override
-    public RespBean login(String username, String password, HttpServletRequest request) {
+    public RespBean login(String username, String password, String code, HttpServletRequest request) {
+
+        String kaptcha = (String) request.getSession().getAttribute("kaptcha");
+        // 判断验证码是否正确
+        if (StringUtils.isEmpty(code) || !kaptcha.equalsIgnoreCase(code)) {
+            return RespBean.error("验证码不正确，请重新输入");
+        }
         // 将通过SecurityConfig的配置类的bean中实现loadUserByUsername方法
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (null == userDetails || !passwordEncoder.matches(password, userDetails.getPassword())) {
@@ -65,7 +73,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        // 为该用户生成token
+        // 为该用户生成tokenus
         String token = jwtUtil.generateToken(userDetails);
         HashMap<String, Object> map = new HashMap<>();
         map.put("tokenHead", tokenHead);
