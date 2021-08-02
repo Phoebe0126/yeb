@@ -33,13 +33,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     @Cacheable(value = "menu", keyGenerator = "keyGenerator")
-    public RespBean getMenusById() {
-        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (null == admin) {
-            return RespBean.error("用户未登录");
-        }
-        List<Menu> menuList = menuMapper.getMenusById(admin.getId());
-        return RespBean.error("获取用户菜单成功", menuList);
+    public List<Menu> getMenusById(Integer adminId) {
+        List<Menu> menuList = menuMapper.getMenusById(adminId);
+        return menuList;
+    }
 
+    public List<Menu> getMenusWithRoles() {
+        return menuMapper.getMenusWithRoles();
     }
 }

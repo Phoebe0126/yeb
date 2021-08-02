@@ -31,30 +31,57 @@
         </collection>
     </resultMap>
 
+    <resultMap id="menusWithRoles" type="com.xxxx.server.pojo.Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="com.xxxx.server.pojo.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnameZh" property="nameZh"/>
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
     </sql>
 
-
+    <!-- 根据用户id查询菜单列表-->
     <select id="getMenusById" resultMap="menuList">
-        select distinct
+        SELECT DISTINCT
                m1.*,
-               m2.id as id2,
-               m2.url as url2,
-               m2.path as path2,
-               m2.component as component2,
-               m2.`name` as name2,
-               m2.iconCls as iconCls2,
-               m2.keepAlive as keepAlive2,
-               m2.requireAuth as requireAuth2,
-               m2.parentId as parentId2,
-               m2.enabled as enabled2
-        from t_menu as m1, t_menu as m2, t_admin_role as ar
-        where m1.id = m2.parentId
-          and m1.enabled = 1
-          and ar.adminId = #{adminId}
-          and ar.rid = m1.id
+               m2.id AS id2,
+               m2.url AS url2,
+               m2.path AS path2,
+               m2.component AS component2,
+               m2.`name` AS name2,
+               m2.iconCls AS iconCls2,
+               m2.keepAlive AS keepAlive2,
+               m2.requireAuth AS requireAuth2,
+               m2.parentId AS parentId2,
+               m2.enabled AS enabled2
+        FROM t_menu AS m1, t_menu AS m2, t_admin_role AS ar
+        WHERE m1.id = m2.parentId
+          AND m1.enabled = 1
+          AND ar.adminId = #{adminId}
+          AND ar.rid = m1.id
+          AND m1.id != 1
+        ORDER BY m1.id
+    </select>
+
+    <!-- 查询所有菜单列表，并携带相应的角色列表-->
+    <select id="getMenusWithRoles" resultMap="menusWithRoles">
+        SELECT m.*,
+               r.id AS rid,
+               r.`name` AS rname,
+               r.nameZh AS rnameZh
+
+        FROM t_menu AS m,
+             t_menu_role as mr,
+             t_role AS r
+
+        WHERE m.id = mr.mid
+          AND r.id = mr.rid
+
+        ORDER BY m.id
     </select>
 
 </mapper>

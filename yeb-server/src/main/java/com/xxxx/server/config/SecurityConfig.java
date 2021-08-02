@@ -5,6 +5,8 @@ import com.xxxx.server.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,10 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
+import java.util.Collection;
+
 /**
- * @author: 陈玉婷
+ * @author: gouzi
  * @create: 2021-07-28 19:16
  **/
 @Configuration
@@ -30,6 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyAuthenticationEntryPoint myAuthenticationEntryPoint;
+
+    @Autowired
+    private CustomFilter customFilter;
+
+    @Autowired
+    private CustomUrlAccessDecisionManager customUrlAccessDecisionManager;
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -59,6 +72,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 都要验证
                 .anyRequest()
                 .authenticated()
+                // 动态权限控制
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        // 判断用户对url是否拥有权限
+                        o.setAccessDecisionManager(customUrlAccessDecisionManager);
+                        // 设置url的角色列表
+                        o.setSecurityMetadataSource(customFilter);
+                        return o;
+                    }
+                })
                 .and()
                 // 禁用缓存
                 .headers()
@@ -91,6 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             if (null == admin) {
                 throw new UsernameNotFoundException("用户名或密码错误！");
             }
+            admin.setRoles(adminService.getRolesByAdminId(admin.getId()));
             return admin;
         };
     }

@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.xxxx.server.mapper.AdminMapper;
+import com.xxxx.server.mapper.RoleMapper;
 import com.xxxx.server.pojo.Admin;
 import com.xxxx.server.pojo.RespBean;
+import com.xxxx.server.pojo.Role;
 import com.xxxx.server.service.IAdminService;
 import com.xxxx.server.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -42,6 +45,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private JwtUtil jwtUtil;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+    @Autowired
+    private RoleMapper roleMapper;
 
 
 
@@ -86,5 +91,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return admin;
     }
 
+    // 根据用户id查询用户角色
+    public List<Role> getRolesByAdminId(Integer adminId) {
+        return roleMapper.getRolesByAdminId(adminId);
+    }
 
 }

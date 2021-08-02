@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Swagger2配置类
- * @author: 陈玉婷
+ * @author: gouzi
  * @create: 2021-07-31 13:28
  **/
 @Configuration

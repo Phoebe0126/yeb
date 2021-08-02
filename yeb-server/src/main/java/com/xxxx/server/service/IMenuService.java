@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxxx.server.pojo.Menu;
 import com.xxxx.server.pojo.RespBean;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -14,5 +16,7 @@ import com.xxxx.server.pojo.RespBean;
  */
 public interface IMenuService extends IService<Menu> {
 
-    RespBean getMenusById();
+    List<Menu> getMenusById(Integer adminId);
+
+    public List<Menu> getMenusWithRoles();
 }

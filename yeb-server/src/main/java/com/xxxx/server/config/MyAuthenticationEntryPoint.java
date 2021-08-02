@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 
 /**
  * 未登录或者token失效的访问结果，就是检测不到全局上下文的时候的处理
- * @author: 陈玉婷
+ * @author: gouzi
  * @create: 2021-07-28 19:16
  **/
 @Component

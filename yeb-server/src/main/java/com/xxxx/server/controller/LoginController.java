@@ -4,6 +4,7 @@ import com.xxxx.server.pojo.Admin;
 import com.xxxx.server.pojo.AdminLoginParams;
 import com.xxxx.server.pojo.RespBean;
 import com.xxxx.server.service.IAdminService;
+import com.xxxx.server.service.IRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**
- * @author: 陈玉婷
+ * @author: gouzi
  * @create: 2021-07-28 18:15
  **/
 @RestController
@@ -22,6 +23,7 @@ public class LoginController {
 
     @Autowired
     IAdminService adminService;
+
 
     @PostMapping("/login")
     @ApiOperation(value = "登录")
@@ -39,6 +41,8 @@ public class LoginController {
         Admin admin = adminService.getAdminByUserName(username);
         // 不能泄露密码！
         admin.setPassword(null);
+        // 加上用户的角色信息
+        admin.setRoles(adminService.getRolesByAdminId(admin.getId()));
         return admin;
     }
 
