@@ -14,4 +14,12 @@
         id, mid, rid
     </sql>
 
+    <insert id="addMenus" >
+        INSERT INTO t_menu_role(mid, rid) VALUES
+        <foreach collection="mids" item="item" separator=",">
+            (#{item}, #{rid})
+        </foreach>
+
+    </insert>
+
 </mapper>

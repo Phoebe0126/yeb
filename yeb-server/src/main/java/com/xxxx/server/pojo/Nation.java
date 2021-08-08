@@ -1,12 +1,12 @@
 package com.xxxx.server.pojo;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -20,7 +20,9 @@ import java.io.Serializable;
  * @since 2021-07-28
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "name")
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Accessors(chain = true)
 @TableName("t_nation")
 @ApiModel(value="Nation对象", description="")
@@ -33,7 +35,8 @@ public class Nation implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "民族")
+    @Excel(name = "民族")
+    @NonNull
     private String name;
-
 
 }

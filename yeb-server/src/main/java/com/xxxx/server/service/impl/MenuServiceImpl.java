@@ -32,7 +32,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     KeyGenerator keyGenerator;
 
     @Override
-    @Cacheable(value = "menu", keyGenerator = "keyGenerator")
     public List<Menu> getMenusById(Integer adminId) {
         List<Menu> menuList = menuMapper.getMenusById(adminId);
         return menuList;
@@ -40,5 +39,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     public List<Menu> getMenusWithRoles() {
         return menuMapper.getMenusWithRoles();
+    }
+
+    @Override
+    @Cacheable(value = "menu", keyGenerator = "keyGenerator")
+    public List<Menu> getAllMenus() {
+        return menuMapper.getAllMenus();
     }
 }

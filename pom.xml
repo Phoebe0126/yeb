@@ -10,6 +10,8 @@
     </parent>
     <modules>
         <module>yeb-server</module>
+        <module>yeb-mail</module>
+        <module>yeb-generator</module>
     </modules>
     <groupId>com.xxxx</groupId>
     <artifactId>yeb</artifactId>

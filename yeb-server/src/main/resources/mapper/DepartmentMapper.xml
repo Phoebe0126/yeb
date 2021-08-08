@@ -12,9 +12,35 @@
         <result column="isParent" property="isParent" />
     </resultMap>
 
+    <resultMap id="allDepartments" type="com.xxxx.server.pojo.Department" extends="BaseResultMap">
+        <collection property="children" ofType="com.xxxx.server.pojo.Department"
+                    select="getAllDepartments" column="id"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, parentId, depPath, enabled, isParent
     </sql>
+
+    <!-- 添加部门 -->
+
+    <!-- 获取所有部门 -->
+    <select id="getAllDepartments" resultMap="allDepartments">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_department
+        WHERE parentId = #{parentId}
+    </select>
+<!--    in depName varchar(32),in parentId int,in enabled boolean,out result int,out result2 int-->
+    <!-- 使用存储过程，添加部门 -->
+    <select id="addDepartment" statementType="CALLABLE" >
+        call addDep(#{name, mode=IN, jdbcType=VARCHAR}, #{parentId, mode=IN, jdbcType=INTEGER}, #{enabled, mode=IN, jdbcType=BOOLEAN},
+            #{result, mode=OUT, jdbcType=INTEGER}, #{id, mode=OUT, jdbcType=INTEGER})
+    </select>
+
+    <!-- 使用存储过程，删除部门 -->
+    <select id="deleteDepartment" statementType="CALLABLE">
+        call deleteDep(#{id, mode=IN, jdbcType=INTEGER}, #{result, mode=OUT, jdbcType=INTEGER})
+    </select>
 
 </mapper>

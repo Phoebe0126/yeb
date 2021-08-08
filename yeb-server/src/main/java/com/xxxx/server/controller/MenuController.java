@@ -36,6 +36,6 @@ public class MenuController {
         if (null == admin) {
             throw new AccessDeniedException("尚未登录，请登录！");
         }
-        return menuService.getMenusById(admin.getId());
+        return menuService.getAllMenus();
     }
 }

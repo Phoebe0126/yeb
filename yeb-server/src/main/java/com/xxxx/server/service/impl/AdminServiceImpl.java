@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.xxxx.server.mapper.AdminMapper;
+import com.xxxx.server.mapper.AdminRoleMapper;
 import com.xxxx.server.mapper.RoleMapper;
 import com.xxxx.server.pojo.Admin;
+import com.xxxx.server.pojo.AdminRole;
 import com.xxxx.server.pojo.RespBean;
 import com.xxxx.server.pojo.Role;
 import com.xxxx.server.service.IAdminService;
@@ -33,6 +35,7 @@ import java.util.List;
  * @since 2021-07-28
  */
 @Service
+
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements IAdminService {
 
     @Autowired
@@ -47,6 +50,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private String tokenHead;
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private AdminRoleMapper adminRoleMapper;
 
 
 
@@ -94,6 +99,25 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     // 根据用户id查询用户角色
     public List<Role> getRolesByAdminId(Integer adminId) {
         return roleMapper.getRolesByAdminId(adminId);
+    }
+
+    @Override
+    // 查询所有操作员
+    public List<Admin> getAllAdmins(String keywords) {
+        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return adminMapper.getAllAdmins(admin.getId(), keywords);
+    }
+
+    // 更新操作员的角色
+    @Override
+    public RespBean updateAdminWithRoles(Integer adminId, Integer[] rids) {
+        QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<AdminRole>().eq("adminId", adminId);
+        adminRoleMapper.delete(queryWrapper);
+        Integer result = adminRoleMapper.insertRoles(adminId, rids);
+        if (result == rids.length) {
+            return RespBean.success("更新操作员角色成功！");
+        }
+        return RespBean.error("更新操作员角色失败！");
     }
 
 }
