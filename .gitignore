@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+yeb-mail/src/main/resources/config/application.yml

@@ -6,6 +6,7 @@
 - 验证码使用Kaptcha
 - redis
 - easy poi
+- RabbitMQ消息队列
 
 
 ## 系统功能
