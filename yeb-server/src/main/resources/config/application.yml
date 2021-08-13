@@ -46,6 +46,8 @@ spring:
     host:
     # 端口
     port: 5672
+    publisher-confirm-type: correlated
+    publisher-returns: true
 
 
 
