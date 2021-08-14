@@ -35,7 +35,7 @@ public class MailTask {
     /**
      * 10秒执行一次
      */
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0/100 * * * * ?")
     public void mailTask() {
         // 查询正在发送的消息
         QueryWrapper<MailLog> queryWrapper = new QueryWrapper<>();
