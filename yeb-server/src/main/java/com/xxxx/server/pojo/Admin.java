@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.xxxx.server.config.CustomAuthoritiesSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -76,6 +78,7 @@ public class Admin implements Serializable, UserDetails {
 
     @Override
     // 设置userDetails的权限
+    @JsonDeserialize(using = CustomAuthoritiesSerializer.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles
                 .stream()

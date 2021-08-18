@@ -56,4 +56,13 @@ public interface IAdminService extends IService<Admin> {
      * @return
      */
     RespBean updateAdminWithRoles(Integer adminId, Integer[] rids);
+
+    /**
+     * 修改用户密码
+     * @param oldPass
+     * @param pass
+     * @param adminId
+     * @return
+     */
+    RespBean updatePassword(String oldPass, String pass, Integer adminId);
 }
